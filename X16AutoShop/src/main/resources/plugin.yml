@@ -1,0 +1,8 @@
+name: X16AutoShop
+main: online.x16.X16AutoShop.X16AutoShop
+version: 1.0-Alpha
+description: A SpigotMC plugin designed to make the creation of Essentials shop signs much easier
+api-version: 1.15
+author: AdamW78
+commands:
+permissions:
