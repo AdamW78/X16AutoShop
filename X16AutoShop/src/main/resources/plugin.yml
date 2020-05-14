@@ -4,5 +4,7 @@ version: 1.0-Alpha
 description: A SpigotMC plugin designed to make the creation of Essentials shop signs much easier
 api-version: 1.15
 author: AdamW78
+depend:
+   - Essentials
 commands:
 permissions:
