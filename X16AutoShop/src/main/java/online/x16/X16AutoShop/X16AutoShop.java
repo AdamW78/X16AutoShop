@@ -1,3 +1,4 @@
+package online.x16.X16AutoShop;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class X16AutoShop extends JavaPlugin {
