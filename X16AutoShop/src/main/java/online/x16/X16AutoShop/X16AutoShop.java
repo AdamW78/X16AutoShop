@@ -7,9 +7,6 @@ import online.x16.X16AutoShop.tools.Colorizer;
 
 public class X16AutoShop extends JavaPlugin {
 
-	public X16AutoShop() { 
-		
-	}
 	@Override
 	public void onEnable() {
 		
