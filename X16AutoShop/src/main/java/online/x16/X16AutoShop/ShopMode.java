@@ -42,7 +42,7 @@ public class ShopMode implements CommandExecutor {
 			else {
 				//Send a message notifying player that shop mode was toggled on or off, toggle shop mode
 				sendToggleMsg(sender);
-				isInShopMode = plugin.getShopModeSet().toggleShopMode((Player) sender, true, Integer.parseInt(args[0]));
+				isInShopMode = plugin.getShopModeSet().toggleShopMode((Player) sender, Integer.parseInt(args[0]));
 			}
 		}
 		//This is reached if the player sends more than 1 argument
