@@ -14,7 +14,7 @@ public class MessageBuilder {
 		prefix = plugin.getConfig().getString("prefix");
 	}
 
-	public static TextComponent build(String str) {
+	public TextComponent build(String str) {
 		return new TextComponent(ChatColor.translateAlternateColorCodes('&', prefix+" "+str));
 	}
 	

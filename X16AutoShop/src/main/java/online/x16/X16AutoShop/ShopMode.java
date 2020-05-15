@@ -11,6 +11,7 @@ public class ShopMode implements CommandExecutor {
 	private X16AutoShop plugin;
 	private ArgumentHandlers handler;
 	private String enableMsg, disableMsg;
+	private MessageBuilder messageBuilder;
 	private ShopModeMap shopModePlayers;
 	private boolean isInShopMode;
 	private boolean debug;
@@ -25,6 +26,7 @@ public class ShopMode implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		messageBuilder = new MessageBuilder(plugin);
 		shopModePlayers = plugin.getShopModeMap();
 		if (!(sender instanceof Player)) {
 			plugin.log("&cError: Shop mode can only be toggled by in-game players");
@@ -120,6 +122,6 @@ public class ShopMode implements CommandExecutor {
 	 */
 	
 	private void send(Player p, String str) {
-		p.spigot().sendMessage(MessageBuilder.build(str));
+		p.spigot().sendMessage(messageBuilder.build(str));
 	}
 }

@@ -19,6 +19,7 @@ public class X16AutoShop extends JavaPlugin {
         config.addDefault("default-shop-size", Integer.valueOf(64));
         config.addDefault("default-sign-material", "OAK_WALL_SIGN");
         config.addDefault("default-sign-color", "BLACK");
+        config.addDefault("default-currency-symbol", "$");
         config.addDefault("log-shop-mode-toggle", Boolean.valueOf(true));
         config.addDefault("prefix", "&7[&9X16 AutoShop&7] &r");
         config.addDefault("autoshop-enabled-message", "&7Automatic shop creation mode enabled - right-click a block-face with the desired shop item.");
@@ -26,6 +27,7 @@ public class X16AutoShop extends JavaPlugin {
         config.addDefault("no-permission-message", "&c[Server] You do not have permission to use this command");
         config.addDefault("debug", false);
         config.options().copyDefaults(true);
+        
         this.saveDefaultConfig();
         this.getCommand("shopmode").setExecutor(new ShopMode(this));
         shopModePlayers = new ShopModeMap(this);

@@ -3,21 +3,29 @@ package online.x16.X16AutoShop;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Worth;
+import com.earth2me.essentials.signs.EssentialsSign;
+import com.earth2me.essentials.signs.SignBuy;
 import com.mojang.datafixers.util.Pair;
 
 public class PlayerInteractListener implements Listener {
@@ -32,7 +40,12 @@ public class PlayerInteractListener implements Listener {
 	
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
 	public void onRightClick(PlayerInteractEvent e) {
-		//Define player who right clicked
+		//Cancel shop sign creation if player did not right click
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK)
+        {
+            return;
+        }
+        //Define player who right clicked
 		Player p = e.getPlayer();
         //Make sure that player is in shop mode
         if (plugin.getShopModeMap().isInShopMode(p))
@@ -55,6 +68,12 @@ public class PlayerInteractListener implements Listener {
             BigDecimal itemWorth = getItemWorth(itemToTrade, amount);
             //Get block that sign will be faced on and direction of the block face that the player is looking at
             Pair<Block,BlockFace> targetedBlockInfo = getBlockFace(p);
+            //Ensure that targeted Block and BlockFace have valid values
+            if (targetedBlockInfo == null)
+            {
+                //Set a default Block value (Block where player is standing) and a default BlockFace value (Block standing up)
+                targetedBlockInfo = new Pair<Block,BlockFace>(p.getLocation().getBlock(), BlockFace.UP);
+            }
             //If sign is to be placed on a wall the sign type must be changed to a wall sign
             if (targetedBlockInfo.getSecond() != BlockFace.UP)
             {
@@ -86,7 +105,7 @@ public class PlayerInteractListener implements Listener {
                 }
             }
             //Create sign
-            createShopSign(targetedBlockInfo.getFirst(), targetedBlockInfo.getSecond(), signType, color, isBuy, itemToTrade, itemWorth);
+            createShopSign(p, targetedBlockInfo.getFirst(), targetedBlockInfo.getSecond(), signType, color, isBuy, itemToTrade, itemWorth);
         }
 	}
 	
@@ -132,12 +151,15 @@ public class PlayerInteractListener implements Listener {
 	 * @param itemToTrade Type of item to be sold
 	 * @param itemWorth Value in supplied currency (default "$") of item purchase
 	 */
-	private void createShopSign(Block signBlock, BlockFace blockFaceDirection, Material signType, DyeColor color, boolean isBuy, ItemStack itemToTrade, BigDecimal itemWorth)
+	private void createShopSign(Player p, Block signBlock, BlockFace blockFaceDirection, Material signType, DyeColor color, boolean isBuy, ItemStack itemToTrade, BigDecimal itemWorth)
 	{
+        //CREATE SIGN
 		//Set block type to sign (place a sign)
 		signBlock.setType(signType);
 		//Assign reference to sign object
 		Sign sign = (Sign) signBlock.getState();
+		
+        //EDIT SIGN TEXT
 		//Change color of text on sign
 		sign.setColor(color);
 		//Set first line of sign to match whether sign will be buying or selling
@@ -152,16 +174,24 @@ public class PlayerInteractListener implements Listener {
 		//Set third line of sign to show the name of the item being sold
 		sign.setLine(2, itemToTrade.getType().name());
 		//Set third line of sign to show the value that the item(s) will be sold/bought for
-		sign.setLine(3, "$" + itemWorth);
-		//Refresh sign to update its text
-		sign.update();
-
-        //Create Temporary sign to store sign facing direction
-        org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign) sign;
-        //Set temporary sign direction
-        signMaterial.setFacingDirection(blockFaceDirection);
-        //Apply data from temporary sign to physical placed sign
-        sign.setRawData(signMaterial.getData());
-        sign.setEditable(false);
+		sign.setLine(3, plugin.getConfig().getString("default-currency-symbol") + itemWorth);
+        //SIGN DIRECTION
+		BlockData signData = sign.getBlockData();
+        if (signData instanceof Rotatable) {
+        	if (debug) plugin.log("Grabbed rotatable data for sign");
+        	Rotatable signRotation = (Rotatable) signData;
+        	signRotation.setRotation(p.getFacing().getOppositeFace());
+        	sign.setBlockData(signRotation);
+        }
+        else if (signData instanceof Directional) {
+        	if (debug) plugin.log("Grabbed directional data for sign");
+        	Directional signDirection = (Directional) signData;
+        	signDirection.setFacing(p.getFacing().getOppositeFace());
+        	sign.setBlockData(signDirection);
+        }
+        else { if (debug) plugin.log("Failed to grab rotatable data"); }
+        //Assign sign direction data to current sign
+        //Refresh sign to update its text and position
+        ISign iSign = new EventSign()
 	}
 }
