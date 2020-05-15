@@ -16,7 +16,7 @@ public class X16AutoShop extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
         PlayerInteractListener listener = new PlayerInteractListener(this);
         pm.registerEvents(listener, this);
-        config.addDefault("default-shop-sell-size", Integer.valueOf(64));
+        config.addDefault("default-shop-size", Integer.valueOf(64));
         config.addDefault("default-sign-material", "OAK_WALL_SIGN");
         config.addDefault("default-sign-color", "BLACK");
         config.addDefault("log-shop-mode-toggle", Boolean.valueOf(true));

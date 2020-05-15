@@ -132,68 +132,7 @@ public class ShopMode implements CommandExecutor {
 		}
 		return true;
 	}
-	
-	/**
-	 * Checks if the supplied trade type is valid
-	 * @param sender Player object for reference so that an error message can be sent
-	 * @param arg String to be checked for validity
-	 * @return Returns true if arg is "Buy" or "Sell"
-	 */
-	private boolean checkTradeArg(Player sender, String arg)
-	{
-		//Ensure that player input is valid
-		if (arg.equalsIgnoreCase("buy") || arg.equalsIgnoreCase("sell"))
-		{
-			return true;
-		}
-		//This is reached if the argument was not valid
-		//Send error message to the player about supplying a bad argument
-		send(sender, "&cError: Please supply a valid trade type - (Buy/Sell)");
-		return false;
-	}
-	private boolean checkTradeArg(String arg) {
-		return arg.equalsIgnoreCase("buy");
-	}
-	
-	/**
-	 * Checks if the argument passed in was NOT an integer between 1 and 2304 (number of items that can fit in inventory)
-	 * @param sender Player object for reference so that an error message can be sent
-	 * @param arg String to be parsed
-	 * @return Returns whether integer is in valid range
-	 */
-	private boolean checkAmountArg(Player sender, String arg)
-	{
-		//Check if the argument passed in was NOT an integer between 1 and 2304 (number of items that can fit in inventory)
-		if (!(arg.matches("\\d{1,4}")) || Integer.parseInt(arg) > 2304 || Integer.parseInt(arg) < 1) {
-			//Send error message to the player about supplying a bad argument
-			send(sender, "&cError: If you are supplying a shop size, it must be an integer between 1 and 2304 (max inventory size)");
-			return false;
-		}
-		//This is reached if the argument was an integer between 1 and 2304
-		return true;
-	}
-	
-	/**
-	 * Gets sign material based on text supplied in argument.
-	 * @param arg - String supplied holding text form of material (Valid arguments are "Oak", "Birch", "Spruce", "Dark_Oak", "Acacia", and "Jungle")
-	 * @return Material representing sign is returned; If the argument is invalid null will be returned.
-	 */
-	
-	
-	/**
-	 * Gets sign text color based on text supplied in argument.
-	 * @param arg - String supplied holding text form of color (Valid arguments are "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
-	 * @return Color of sign text is returned; If the argument is invalid null will be returned.
-	 */
-	private DyeColor getSignColor(String arg)
-	{
-		return DyeColor.valueOf(arg.toUpperCase());
-	}
-	
-	/**
-	 * Sends a message notifying the player whether auto-shop creation was toggled on or off
-	 * @param sender Player to whom the message will be sent
-	 */
+
 	private void sendToggleMsg (CommandSender sender) {
 		if (isInShopMode) send(sender, disableMsg);
 		else send(sender, enableMsg);
