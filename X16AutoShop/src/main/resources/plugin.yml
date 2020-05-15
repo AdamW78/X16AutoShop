@@ -7,4 +7,10 @@ author: AdamW78
 depend:
    - Essentials
 commands:
+   shopmode:
+      description: Toggles automatic shop creation
+      aliases: [autoshop, auto-shop, shop-mode, as, sm]
+      permission: x16autoshop.toggle
+      usage: "Usage: /<command> (buy/sell) [shop-size] [sign-type] [sign-color]"
+      
 permissions:
