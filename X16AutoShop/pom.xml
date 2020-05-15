@@ -10,6 +10,10 @@
     	<id>spigotmc-repo</id>
         <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
+	<repository>
+        <id>minecraft-repo</id>
+        <url>https://libraries.minecraft.net/</url>
+    </repository>
     <repository>
         <id>ess-repo</id>
         <url>https://ci.ender.zone/plugin/repository/everything/</url>
@@ -29,6 +33,12 @@
         <version>2.17.2</version>
         <scope>provided</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.mojang/minecraft-server -->
+	<dependency>
+    	<groupId>com.mojang</groupId>
+    	<artifactId>datafixerupper</artifactId>
+    	<version>1.0.20</version>
+	</dependency>
   </dependencies>
   <build>
   	<defaultGoal>clean package</defaultGoal>

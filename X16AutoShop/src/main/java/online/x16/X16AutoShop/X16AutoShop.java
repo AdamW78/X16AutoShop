@@ -17,6 +17,8 @@ public class X16AutoShop extends JavaPlugin {
         PlayerInteractListener listener = new PlayerInteractListener(this);
         pm.registerEvents(listener, this);
         config.addDefault("default-shop-sell-size", Integer.valueOf(64));
+        config.addDefault("default-sign-material", "OAK_WALL_SIGN");
+        config.addDefault("default-sign-color", "BLACK");
         config.addDefault("log-shop-mode-toggle", Boolean.valueOf(true));
         config.addDefault("prefix", "&7[&9X16 AutoShop&7] &r");
         config.addDefault("autoshop-enabled-message", "&7Automatic shop creation mode enabled - right-click a block-face with the desired shop item.");
@@ -34,7 +36,7 @@ public class X16AutoShop extends JavaPlugin {
 	public void log(Object obj) {
         if(getConfig().getBoolean("color-logs", true)){
             getServer().getConsoleSender().sendMessage(Colorizer.colorize("&3[&d" + getName() + "&3] &r" + obj));
-        }
+        } 
         else {
             Bukkit.getLogger().log(Level.INFO, "[" + getName() + "] " + Colorizer.colorize((String) obj).replaceAll("(?)\u00a7([a-f0-9k-or])", ""));
         }
