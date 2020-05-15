@@ -31,54 +31,58 @@ public class PlayerInteractListener implements Listener {
 	public void onRightClick(PlayerInteractEvent e) {
 		//Define player who right clicked
 		Player p = e.getPlayer();
-		//Retrieve the Sign Type to be used
-		Material signType = plugin.getShopModeSet().getSignMaterial(p);
-		//Retrieve the Sign Color to be used
-		DyeColor color = plugin.getShopModeSet().getSignColor(p);
-		//Retrieve the type of trade that will be set
-		boolean isBuy = plugin.getShopModeSet().isBuy(p);
-		//Retrieve the set amount of item
-		int amount = plugin.getShopModeSet().getShopSize(p);
-		//Retrieve item in player's main hand
-		ItemStack itemToTrade = p.getInventory().getItemInMainHand();
-		//Set item count to supplied count
-		itemToTrade.setAmount(amount);
-		//Retrieve worth of item to be traded based on value and amount
-		BigDecimal itemWorth = getItemWorth(itemToTrade, amount);
-		//Get block that sign will be faced on and direction of the block face that the player is looking at
-		Pair<Block,BlockFace> targetedBlockInfo = getBlockFace(p);
-		//If sign is to be placed on a wall the sign type must be changed to a wall sign
-		if (targetedBlockInfo.getSecond() != BlockFace.UP)
-		{
-			switch (signType)
-			{
-				//Reset sign type to matching wall sign type
-				case OAK_WALL_SIGN:
-					signType = Material.OAK_WALL_SIGN;
-					break;
-				case BIRCH_WALL_SIGN:
-					signType = Material.BIRCH_WALL_SIGN;
-					break;
-				case SPRUCE_WALL_SIGN:
-					signType = Material.SPRUCE_WALL_SIGN;
-					break;
-				case DARK_OAK_WALL_SIGN:
-					signType = Material.DARK_OAK_WALL_SIGN;
-					break;
-				case ACACIA_WALL_SIGN:
-					signType = Material.ACACIA_WALL_SIGN;
-					break;
-				case JUNGLE_WALL_SIGN:
-					signType = Material.JUNGLE_WALL_SIGN;
-					break;
-				//In case invalid sign type is called default to oak wood
-				default:
-					signType = Material.OAK_WALL_SIGN;
-					break;
-			}
-		}
-		//Create sign
-		createShopSign(targetedBlockInfo.getFirst(), signType, color, isBuy, itemToTrade, itemWorth);
+        //Make sure that player is in shop mode
+        if (plugin.getShopModeMap().isInShopMode(p))
+        {
+            //Retrieve the Sign Type to be used
+            Material signType = plugin.getShopModeMap().getSignMaterial(p);
+            //Retrieve the Sign Color to be used
+            DyeColor color = plugin.getShopModeMap().getSignColor(p);
+            //Retrieve the type of trade that will be set
+            boolean isBuy = plugin.getShopModeMap().isBuy(p);
+            //Retrieve the set amount of item
+            int amount = plugin.getShopModeMap().getShopSize(p);
+            //Retrieve item in player's main hand
+            ItemStack itemToTrade = p.getInventory().getItemInMainHand();
+            //Set item count to supplied count
+            itemToTrade.setAmount(amount);
+            //Retrieve worth of item to be traded based on value and amount
+            BigDecimal itemWorth = getItemWorth(itemToTrade, amount);
+            //Get block that sign will be faced on and direction of the block face that the player is looking at
+            Pair<Block,BlockFace> targetedBlockInfo = getBlockFace(p);
+            //If sign is to be placed on a wall the sign type must be changed to a wall sign
+            if (targetedBlockInfo.getSecond() != BlockFace.UP)
+            {
+                switch (signType)
+                {
+                    //Reset sign type to matching wall sign type
+                    case OAK_WALL_SIGN:
+                        signType = Material.OAK_WALL_SIGN;
+                        break;
+                    case BIRCH_WALL_SIGN:
+                        signType = Material.BIRCH_WALL_SIGN;
+                        break;
+                    case SPRUCE_WALL_SIGN:
+                        signType = Material.SPRUCE_WALL_SIGN;
+                        break;
+                    case DARK_OAK_WALL_SIGN:
+                        signType = Material.DARK_OAK_WALL_SIGN;
+                        break;
+                    case ACACIA_WALL_SIGN:
+                        signType = Material.ACACIA_WALL_SIGN;
+                        break;
+                    case JUNGLE_WALL_SIGN:
+                        signType = Material.JUNGLE_WALL_SIGN;
+                        break;
+                    //In case invalid sign type is called default to oak wood
+                    default:
+                        signType = Material.OAK_WALL_SIGN;
+                        break;
+                }
+            }
+            //Create sign
+            createShopSign(targetedBlockInfo.getFirst(), signType, color, isBuy, itemToTrade, itemWorth);
+        }
 	}
 	
 	/**

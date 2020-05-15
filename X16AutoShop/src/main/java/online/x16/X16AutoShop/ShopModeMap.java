@@ -7,12 +7,17 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-public class ShopModeSet {
+public class ShopModeMap {
 	
+	private X16AutoShop plugin;
 	private HashMap<Player, ArrayList<Object>> shopModePlayers;
+	private boolean debug;
 	
-	public ShopModeSet() {
+	public ShopModeMap(X16AutoShop instance) {
 		shopModePlayers = new HashMap<Player, ArrayList<Object>>();
+		plugin = instance;
+		debug = true;
+		if (debug) plugin.log("ShopModeMap instantiated");
 	}
 
 	/**
@@ -21,6 +26,7 @@ public class ShopModeSet {
 	 * @return Boolean value for whether player is in ShopMode
 	 */
 	public boolean isInShopMode(Player p) {
+		if (debug) plugin.log("Checking Shop mode for "+p.getName()+": "+shopModePlayers.containsKey(p));
 		return shopModePlayers.containsKey(p);
 	}
 	/**
@@ -31,11 +37,14 @@ public class ShopModeSet {
 	 */
 	public boolean toggleShopMode(Player p, ArrayList<Object> args) {
 		//Check if the player is already in shop Mode
+		if (debug) plugin.log("Begun toggling shop mode for "+p.getName());
 		if (isInShopMode(p)) {
+			if (debug) plugin.log(p.getName()+" was already in shop mode, toggling off");
 			shopModePlayers.remove(p);
 			return false;
 		}
 		else {
+			if (debug) plugin.log(p.getName()+" was NOT in shop mode, putting in shop mode now");
 			shopModePlayers.put(p, args);
 			return true;
 		}

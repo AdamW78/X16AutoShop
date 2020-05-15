@@ -9,7 +9,7 @@ import online.x16.X16AutoShop.tools.Colorizer;
 public class X16AutoShop extends JavaPlugin {
 
 	final FileConfiguration config = getConfig();
-	private ShopModeSet shopModePlayers;
+	private ShopModeMap shopModePlayers;
 	
 	@Override
 	public void onEnable() {
@@ -24,7 +24,10 @@ public class X16AutoShop extends JavaPlugin {
         config.addDefault("autoshop-enabled-message", "&7Automatic shop creation mode enabled - right-click a block-face with the desired shop item.");
         config.addDefault("autoshop-disabled-message", "&7Automatic shop creation mode disabled.");
         config.addDefault("no-permission-message", "&c[Server] You do not have permission to use this command");
-        shopModePlayers = new ShopModeSet();
+        config.options().copyDefaults(true);
+        this.saveConfig();
+        this.getCommand("shopmode").setExecutor(new ShopMode(this));
+        shopModePlayers = new ShopModeMap(this);
 	}
 	
 	@Override
@@ -42,7 +45,7 @@ public class X16AutoShop extends JavaPlugin {
         }
     }
 	
-	public ShopModeSet getShopModeSet() {
+	public ShopModeMap getShopModeMap() {
 		return shopModePlayers;
 	}
 }

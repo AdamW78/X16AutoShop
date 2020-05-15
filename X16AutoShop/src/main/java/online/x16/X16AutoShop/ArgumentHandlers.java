@@ -3,6 +3,7 @@ package online.x16.X16AutoShop;
 import java.util.ArrayList;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class ArgumentHandlers {
 	
@@ -14,8 +15,8 @@ public class ArgumentHandlers {
 		defaultShopSize = Integer.toString(plugin.getConfig().getInt("default-shop-size"));
 		defaultMaterial = plugin.getConfig().getString("default-sign-material").toUpperCase();
 		//Check to make sure the sign material from the config is valid - if it's not, set the default to Material.OAK_WALL_SIGN
-		defaultMaterial = (!defaultMaterial.equals("OAK_WALL_SIGN") && checkSignMaterial(defaultMaterial).equals(Material.OAK_WALL_SIGN))
-				? "OAK_WALL_SIGN" : defaultMaterial;
+		defaultMaterial = (!defaultMaterial.equals("OAK_WALL_SIGN") && checkSignMaterial(defaultMaterial).equals(Material.OAK_SIGN))
+				? "OAK_SIGN" : defaultMaterial;
 		//Check to make sure the sign material from the config is valid - if it's not, set the default to Material.OAK_WALL_SIGN
 		defaultDyeColor = plugin.getConfig().getString("default-sign-color").toUpperCase();
 		defaultDyeColor = !defaultDyeColor.equals("BLACK") && checkSignColor(defaultDyeColor).equals(DyeColor.BLACK)
@@ -30,7 +31,7 @@ public class ArgumentHandlers {
 	 * @param dyeColor String to convert to dyeColor and put fourth into ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public ArrayList<Object> handle(String isBuy, String shopSize, String material, String dyeColor) throws IllegalArgumentException {
+	public void handle(Player p, String isBuy, String shopSize, String material, String dyeColor) throws IllegalArgumentException {
 		ArrayList<Object> handledArgs = new ArrayList<Object>();
 		//Check if String isBuy was NOT "buy" or "sell" - then throw IllegalArgumentException
 		if (checkTradeArg(isBuy) == null) throw new IllegalArgumentException("isBuy argument must be either \"buy\" or \"sell\"");
@@ -41,7 +42,7 @@ public class ArgumentHandlers {
 		handledArgs.add(checkAmountArg(shopSize));
 		handledArgs.add(checkSignMaterial(material));
 		handledArgs.add(checkSignColor(dyeColor));
-		return handledArgs;
+		plugin.getShopModeMap().toggleShopMode(p, handledArgs);
 	}
 
 	/**
@@ -52,8 +53,8 @@ public class ArgumentHandlers {
 	 * @param material String to convert to material and put third into ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public ArrayList<Object> handle(String isBuy, String shopSize, String material) {
-		return handle(isBuy, shopSize, material, defaultDyeColor);
+	public void handle(Player p, String isBuy, String shopSize, String material) {
+		handle(p, isBuy, shopSize, material, defaultDyeColor);
 	}
 	
 	/**
@@ -63,8 +64,8 @@ public class ArgumentHandlers {
 	 * @param shopSize String to convert to int and put second in ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public ArrayList<Object> handle(String isBuy, String shopSize) {
-		return handle(isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
+	public void handle(Player p, String isBuy, String shopSize) {
+		handle(p, isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
 	}
 	
 	/**
@@ -72,8 +73,8 @@ public class ArgumentHandlers {
 	 * @param isBuy String to convert to boolean and put first into ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public ArrayList<Object> handle(String isBuy) {
-		return handle(isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
+	public void handle(Player p, String isBuy) {
+		handle(p, isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
 	}
 	
 	/**
@@ -124,7 +125,7 @@ public class ArgumentHandlers {
 				return Material.JUNGLE_WALL_SIGN;
 			//In case invalid sign type is called default to oak wood
 			default:
-				return Material.OAK_WALL_SIGN;
+				return Material.OAK_SIGN;
         }
 	}
 	
