@@ -113,18 +113,18 @@ public class ArgumentHandlers {
 	private Material checkSignMaterial(String arg) {
         arg = arg.toUpperCase();
 		switch (arg) {
-			case "OAK_WALL_SIGN":
-				return Material.OAK_WALL_SIGN;
+			case "OAK_SIGN":
+				return Material.OAK_SIGN;
 			case "BIRCH_WALL_SIGN":
-				return Material.BIRCH_WALL_SIGN;
+				return Material.BIRCH_SIGN;
 			case "SPRUCE_WALL_SIGN":
-				return Material.SPRUCE_WALL_SIGN;
+				return Material.SPRUCE_SIGN;
 			case "DARK_OAK_WALL_SIGN":
-				return Material.DARK_OAK_WALL_SIGN;
+				return Material.DARK_OAK_SIGN;
 			case "ACACIA_WALL_SIGN":
-				return Material.ACACIA_WALL_SIGN;
+				return Material.ACACIA_SIGN;
 			case "JUNGLE_WALL_SIGN":
-				return Material.JUNGLE_WALL_SIGN;
+				return Material.JUNGLE_SIGN;
 			//In case invalid sign type is called default to oak wood
 			default:
 				return Material.OAK_SIGN;

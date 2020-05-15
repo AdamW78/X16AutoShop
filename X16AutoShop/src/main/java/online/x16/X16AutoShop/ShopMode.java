@@ -71,9 +71,9 @@ public class ShopMode implements CommandExecutor {
 		}
 		//Check if logging shop mode toggle to the console is enabled
 		if (plugin.getConfig().getBoolean("log-shop-mode-toggle")) {
-			String onOff = "off."; //String that changes based on whether shop mode is on or off for the command sender AFTER the toggle
+			String onOff = "on."; //String that changes based on whether shop mode is on or off for the command sender AFTER the toggle
 			//If the player is in shop mode AFTER the toggle, change the string to "on."
-			if (isInShopMode) onOff = "on.";
+			if (isInShopMode) onOff = "off.";
 			//Log that the player toggled shop mode on or off
 			plugin.log(sender+" turned shop mode "+onOff);
 		}

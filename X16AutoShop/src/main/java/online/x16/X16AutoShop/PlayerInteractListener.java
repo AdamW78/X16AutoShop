@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -154,11 +155,13 @@ public class PlayerInteractListener implements Listener {
 		sign.setLine(3, "$" + itemWorth);
 		//Refresh sign to update its text
 		sign.update();
+
         //Create Temporary sign to store sign facing direction
         org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign) sign;
         //Set temporary sign direction
         signMaterial.setFacingDirection(blockFaceDirection);
         //Apply data from temporary sign to physical placed sign
         sign.setRawData(signMaterial.getData());
+        sign.setEditable(false);
 	}
 }

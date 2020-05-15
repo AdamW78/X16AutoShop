@@ -1,0 +1,9 @@
+default-shop-size: 64
+default-sign-material: OAK_WALL_SIGN
+default-sign-color: BLACK
+log-shop-mode-toggle: true
+prefix: "&7[&9X16 AutoShop&7] &r"
+autoshop-enabled-message: "&7Automatic shop creation mode enabled - right-click a block-face with the desired shop item."
+autoshop-disabled-message: "&7Automatic shop creation mode disabled."
+no-permission-message: "&c[Server] You do not have permission to use this command"
+debug: true
