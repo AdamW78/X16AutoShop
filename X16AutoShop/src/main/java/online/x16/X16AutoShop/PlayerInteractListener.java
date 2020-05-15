@@ -22,18 +22,22 @@ import com.mojang.datafixers.util.Pair;
 public class PlayerInteractListener implements Listener {
 	
 	private X16AutoShop plugin;
+	private boolean debug;
 	
 	public PlayerInteractListener(X16AutoShop instance) {
 		plugin = instance;
+		debug = plugin.getConfig().getBoolean("debug");
 	}
 	
-	@EventHandler (priority = EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
 	public void onRightClick(PlayerInteractEvent e) {
 		//Define player who right clicked
 		Player p = e.getPlayer();
         //Make sure that player is in shop mode
         if (plugin.getShopModeMap().isInShopMode(p))
         {
+            //Cancel player event (Block place, block destroy, etc)
+            e.setCancelled(true);
             //Retrieve the Sign Type to be used
             Material signType = plugin.getShopModeMap().getSignMaterial(p);
             //Retrieve the Sign Color to be used
@@ -56,22 +60,22 @@ public class PlayerInteractListener implements Listener {
                 switch (signType)
                 {
                     //Reset sign type to matching wall sign type
-                    case OAK_WALL_SIGN:
+                    case OAK_SIGN:
                         signType = Material.OAK_WALL_SIGN;
                         break;
-                    case BIRCH_WALL_SIGN:
+                    case BIRCH_SIGN:
                         signType = Material.BIRCH_WALL_SIGN;
                         break;
-                    case SPRUCE_WALL_SIGN:
+                    case SPRUCE_SIGN:
                         signType = Material.SPRUCE_WALL_SIGN;
                         break;
-                    case DARK_OAK_WALL_SIGN:
+                    case DARK_OAK_SIGN:
                         signType = Material.DARK_OAK_WALL_SIGN;
                         break;
-                    case ACACIA_WALL_SIGN:
+                    case ACACIA_SIGN:
                         signType = Material.ACACIA_WALL_SIGN;
                         break;
-                    case JUNGLE_WALL_SIGN:
+                    case JUNGLE_SIGN:
                         signType = Material.JUNGLE_WALL_SIGN;
                         break;
                     //In case invalid sign type is called default to oak wood
@@ -81,7 +85,7 @@ public class PlayerInteractListener implements Listener {
                 }
             }
             //Create sign
-            createShopSign(targetedBlockInfo.getFirst(), signType, color, isBuy, itemToTrade, itemWorth);
+            createShopSign(targetedBlockInfo.getFirst(), targetedBlockInfo.getSecond(), signType, color, isBuy, itemToTrade, itemWorth);
         }
 	}
 	
@@ -91,16 +95,14 @@ public class PlayerInteractListener implements Listener {
 	 * @param amount amount of item
 	 * @return worth of item based on the object's value and amount
 	 */
-	public BigDecimal getItemWorth(ItemStack itemInHand, int amount)
+	private BigDecimal getItemWorth(ItemStack itemInHand, int amount)
 	{
-		//Define essentials object for future use
-		Essentials ess = new Essentials();
 		//Get worth object which contains all blocks and their prices
-		Worth worth = ess.getWorth();
+		Worth worth = Essentials.getPlugin(Essentials.class).getWorth();
 		//Ensure that item stack has the correct item amount set
 		itemInHand.setAmount(amount);
 		//Get price of item(s) based on the amount of items and the price from the worth obj
-		return worth.getPrice(ess, itemInHand);
+		return worth.getPrice(Essentials.getPlugin(Essentials.class), itemInHand);
 	}
 
 	/**
@@ -110,7 +112,7 @@ public class PlayerInteractListener implements Listener {
 	* @return the Block adjacent to the player's targeted BlockFace
 	* and the BlockFace direction of the targeted block, or null if the targeted block is non-occluding.
 	*/
-	public Pair<Block,BlockFace> getBlockFace(Player player) {
+	private Pair<Block,BlockFace> getBlockFace(Player player) {
 	    List<Block> lastTwoTargetBlocks = player.getLastTwoTargetBlocks(null, 100);
 	    if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding()) return null;
 	    Block targetBlock = lastTwoTargetBlocks.get(1);
@@ -121,6 +123,7 @@ public class PlayerInteractListener implements Listener {
 	/**
 	 * Creates a sign and writes the shop code on its lines
 	 * @param signBlock Block where sign will be placed
+     * @param blockFaceDirection Direction that sign will be placed
 	 * @param signType Sign type/material (Oak, Birch, Spruce, etc)
 	 * @param color Sign text color (Red, Green, Blue)
 	 * @param isBuy Whether sign shop trade type is "Buy" or "Sell"
@@ -128,7 +131,7 @@ public class PlayerInteractListener implements Listener {
 	 * @param itemToTrade Type of item to be sold
 	 * @param itemWorth Value in supplied currency (default "$") of item purchase
 	 */
-	public void createShopSign(Block signBlock, Material signType, DyeColor color, boolean isBuy, ItemStack itemToTrade, BigDecimal itemWorth)
+	private void createShopSign(Block signBlock, BlockFace blockFaceDirection, Material signType, DyeColor color, boolean isBuy, ItemStack itemToTrade, BigDecimal itemWorth)
 	{
 		//Set block type to sign (place a sign)
 		signBlock.setType(signType);
@@ -151,5 +154,11 @@ public class PlayerInteractListener implements Listener {
 		sign.setLine(3, "$" + itemWorth);
 		//Refresh sign to update its text
 		sign.update();
+        //Create Temporary sign to store sign facing direction
+        org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign) sign;
+        //Set temporary sign direction
+        signMaterial.setFacingDirection(blockFaceDirection);
+        //Apply data from temporary sign to physical placed sign
+        sign.setRawData(signMaterial.getData());
 	}
 }

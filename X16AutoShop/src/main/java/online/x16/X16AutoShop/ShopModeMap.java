@@ -16,7 +16,7 @@ public class ShopModeMap {
 	public ShopModeMap(X16AutoShop instance) {
 		shopModePlayers = new HashMap<Player, ArrayList<Object>>();
 		plugin = instance;
-		debug = true;
+		debug = plugin.getConfig().getBoolean("debug");
 		if (debug) plugin.log("ShopModeMap instantiated");
 	}
 

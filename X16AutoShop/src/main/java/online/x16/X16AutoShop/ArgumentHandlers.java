@@ -9,9 +9,11 @@ public class ArgumentHandlers {
 	
 	private X16AutoShop plugin;
 	private String defaultShopSize, defaultMaterial, defaultDyeColor;
+	private boolean debug;
 	
 	public ArgumentHandlers (X16AutoShop instance) {
 		plugin = instance;
+		debug = plugin.getConfig().getBoolean("debug");
 		defaultShopSize = Integer.toString(plugin.getConfig().getInt("default-shop-size"));
 		defaultMaterial = plugin.getConfig().getString("default-sign-material").toUpperCase();
 		//Check to make sure the sign material from the config is valid - if it's not, set the default to Material.OAK_WALL_SIGN
@@ -31,7 +33,7 @@ public class ArgumentHandlers {
 	 * @param dyeColor String to convert to dyeColor and put fourth into ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public void handle(Player p, String isBuy, String shopSize, String material, String dyeColor) throws IllegalArgumentException {
+	public ArrayList<Object> handle(Player p, String isBuy, String shopSize, String material, String dyeColor) throws IllegalArgumentException {
 		ArrayList<Object> handledArgs = new ArrayList<Object>();
 		//Check if String isBuy was NOT "buy" or "sell" - then throw IllegalArgumentException
 		if (checkTradeArg(isBuy) == null) throw new IllegalArgumentException("isBuy argument must be either \"buy\" or \"sell\"");
@@ -42,7 +44,7 @@ public class ArgumentHandlers {
 		handledArgs.add(checkAmountArg(shopSize));
 		handledArgs.add(checkSignMaterial(material));
 		handledArgs.add(checkSignColor(dyeColor));
-		plugin.getShopModeMap().toggleShopMode(p, handledArgs);
+		return handledArgs;
 	}
 
 	/**
@@ -53,8 +55,8 @@ public class ArgumentHandlers {
 	 * @param material String to convert to material and put third into ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public void handle(Player p, String isBuy, String shopSize, String material) {
-		handle(p, isBuy, shopSize, material, defaultDyeColor);
+	public ArrayList<Object> handle(Player p, String isBuy, String shopSize, String material) {
+		return handle(p, isBuy, shopSize, material, defaultDyeColor);
 	}
 	
 	/**
@@ -64,8 +66,8 @@ public class ArgumentHandlers {
 	 * @param shopSize String to convert to int and put second in ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public void handle(Player p, String isBuy, String shopSize) {
-		handle(p, isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
+	public ArrayList<Object> handle(Player p, String isBuy, String shopSize) {
+		return handle(p, isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
 	}
 	
 	/**
@@ -73,8 +75,8 @@ public class ArgumentHandlers {
 	 * @param isBuy String to convert to boolean and put first into ArrayList
 	 * @return ArrayList with a Boolean, Integer, Material, and DyeColor
 	 */
-	public void handle(Player p, String isBuy) {
-		handle(p, isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
+	public ArrayList<Object> handle(Player p, String isBuy) {
+		return handle(p, isBuy, defaultShopSize, defaultMaterial, defaultDyeColor);
 	}
 	
 	/**

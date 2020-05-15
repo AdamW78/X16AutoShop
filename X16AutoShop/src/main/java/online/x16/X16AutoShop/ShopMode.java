@@ -11,6 +11,7 @@ public class ShopMode implements CommandExecutor {
 	private X16AutoShop plugin;
 	private ArgumentHandlers handler;
 	private String enableMsg, disableMsg;
+	private ShopModeMap shopModePlayers;
 	private boolean isInShopMode;
 	private boolean debug;
 	
@@ -19,17 +20,18 @@ public class ShopMode implements CommandExecutor {
 		handler = new ArgumentHandlers(plugin);
 		enableMsg = plugin.getConfig().getString("autoshop-enabled-message");
 		disableMsg = plugin.getConfig().getString("autoshop-disabled-message");
-		debug = true;
+		debug = plugin.getConfig().getBoolean("debug");
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		shopModePlayers = plugin.getShopModeMap();
 		if (!(sender instanceof Player)) {
 			plugin.log("&cError: Shop mode can only be toggled by in-game players");
 			return false;
 		}
 		Player p = (Player) sender;
-		isInShopMode = plugin.getShopModeMap().isInShopMode(p);
+		isInShopMode = shopModePlayers.isInShopMode(p);
 		if (!(sender.hasPermission("x16autoshop.toggle"))) {
 			if (debug) plugin.log("Player used command and has permission");
 			return false;
@@ -45,22 +47,22 @@ public class ShopMode implements CommandExecutor {
 					return true;
 				}
 				if (catchIllegalArguments(p, args[0])) return true;
-				handler.handle(p, args[0]);
+				shopModePlayers.toggleShopMode(p, handler.handle(p, args[0]));
 				sendToggleMsg(p);
 				break;
 			case (2):
 				if (catchIllegalArguments(p, args[0], args[1])) return true;
-				handler.handle(p, args[0], args[1]);
+				shopModePlayers.toggleShopMode(p, handler.handle(p, args[0], args[1]));
 				sendToggleMsg(p);
 				break;
 			case (3):
 				if (catchIllegalArguments(p, args[0], args[1])) return true;
-				handler.handle(p, args[0], args[1], args[2]);
+				shopModePlayers.toggleShopMode(p, handler.handle(p, args[0], args[1], args[2]));
 				sendToggleMsg(p);
 				break;
 			case (4):
 				if (catchIllegalArguments(p, args[0], args[1])) return true;
-				handler.handle(p, args[0], args[1], args[2], args[3]);
+				shopModePlayers.toggleShopMode(p, handler.handle(p, args[0], args[1], args[2], args[3]));
 				sendToggleMsg(p);
 				break;
 			default:
