@@ -192,6 +192,12 @@ public class PlayerInteractListener implements Listener {
         else { if (debug) plugin.log("Failed to grab rotatable data"); }
         //Assign sign direction data to current sign
         //Refresh sign to update its text and position
-        ISign iSign = new EventSign()
+        String[] theLines = new String[4];
+        theLines[0] = sign.getLine(0);
+        theLines[1] = sign.getLine(1);
+        theLines[2] = sign.getLine(2);
+        theLines[3] = sign.getLine(3);
+        SignChangeEvent signChange = new SignChangeEvent(signBlock, p, theLines);
+        Bukkit.getServer().getPluginManager().callEvent(signChange);
 	}
 }
