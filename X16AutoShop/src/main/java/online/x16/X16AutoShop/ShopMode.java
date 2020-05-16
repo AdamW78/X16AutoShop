@@ -46,7 +46,6 @@ public class ShopMode implements CommandExecutor {
 				catch (IllegalArgumentException e) {
 					send(p, "&cError: Please provide a type of trade sign - buy/sell");
 				}
-				shopModePlayers.toggleShopMode(p);
 				return true;
 			//Checks if you provided a valid buy/sell value, otherwise tells you to - then toggles shop mode
 			case (1):
