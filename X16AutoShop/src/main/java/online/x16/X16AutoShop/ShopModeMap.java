@@ -26,7 +26,6 @@ public class ShopModeMap {
 	 * @return Boolean value for whether player is in ShopMode
 	 */
 	public boolean isInShopMode(Player p) {
-		if (debug) plugin.log("Checking Shop mode for "+p.getName()+": "+shopModePlayers.containsKey(p));
 		return shopModePlayers.containsKey(p);
 	}
 	/**
@@ -48,6 +47,13 @@ public class ShopModeMap {
 			shopModePlayers.put(p, args);
 			return true;
 		}
+	}
+	public boolean toggleShopMode(Player p) throws IllegalArgumentException {
+		if (isInShopMode(p)) {
+			shopModePlayers.remove(p);
+			return false;
+		}
+		else throw new IllegalArgumentException("No arguments supplied for player not already in shop mode");
 	}
 		
     /**

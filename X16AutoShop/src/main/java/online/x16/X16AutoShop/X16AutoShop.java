@@ -27,10 +27,10 @@ public class X16AutoShop extends JavaPlugin {
         config.addDefault("no-permission-message", "&c[Server] You do not have permission to use this command");
         config.addDefault("debug", false);
         config.options().copyDefaults(true);
-        
         this.saveDefaultConfig();
         this.getCommand("shopmode").setExecutor(new ShopMode(this));
         shopModePlayers = new ShopModeMap(this);
+        if (config.getBoolean("debug")) log("Debug mode is enabled - Console may get spammy");
 	}
 	
 	@Override

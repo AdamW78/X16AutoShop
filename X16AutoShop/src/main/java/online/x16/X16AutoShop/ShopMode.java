@@ -38,11 +38,17 @@ public class ShopMode implements CommandExecutor {
 			if (debug) plugin.log("Player used command and has permission");
 			return false;
 		}
-		//If there are no arguments supplied, pass in no arguments to toggleShopMode - this uses the default config size for the shop size
+		//Handle the command differently based on different numbers of arguments provided
 		switch (args.length) {
+			//You can only provide 0 arguments if you are turning shop mode off
 			case (0):
-				send(p, "&cError: Please provide a type of trade sign - buy/sell");
+				try { shopModePlayers.toggleShopMode(p); }
+				catch (IllegalArgumentException e) {
+					send(p, "&cError: Please provide a type of trade sign - buy/sell");
+				}
+				shopModePlayers.toggleShopMode(p);
 				return true;
+			//Checks if you provided a valid buy/sell value, otherwise tells you to - then toggles shop mode
 			case (1):
 				if (args[0].equals("help")) {
 					send (p, "Usage: /<command> (buy/sell) [shop-size] [sign-type] [sign-color]");
@@ -52,6 +58,8 @@ public class ShopMode implements CommandExecutor {
 				shopModePlayers.toggleShopMode(p, handler.handle(p, args[0]));
 				sendToggleMsg(p);
 				break;
+			//The rest check if you provided valid a buy/sell value and shop size value - then it toggles shop mode
+			//If you provide an invalid Material and/or DyeColor, the plugin uses default values
 			case (2):
 				if (catchIllegalArguments(p, args[0], args[1])) return true;
 				shopModePlayers.toggleShopMode(p, handler.handle(p, args[0], args[1]));
@@ -70,14 +78,6 @@ public class ShopMode implements CommandExecutor {
 			default:
 				send(p, "&cError: Too many arguments - use "+command+"help");
 				return true;
-		}
-		//Check if logging shop mode toggle to the console is enabled
-		if (plugin.getConfig().getBoolean("log-shop-mode-toggle")) {
-			String onOff = "on."; //String that changes based on whether shop mode is on or off for the command sender AFTER the toggle
-			//If the player is in shop mode AFTER the toggle, change the string to "on."
-			if (isInShopMode) onOff = "off.";
-			//Log that the player toggled shop mode on or off
-			plugin.log(sender+" turned shop mode "+onOff);
 		}
 		return true;
 	}

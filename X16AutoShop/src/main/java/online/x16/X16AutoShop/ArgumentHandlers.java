@@ -44,6 +44,7 @@ public class ArgumentHandlers {
 		handledArgs.add(checkAmountArg(shopSize));
 		handledArgs.add(checkSignMaterial(material));
 		handledArgs.add(checkSignColor(dyeColor));
+		if (debug) plugin.log("All argument for sign creation properly handled - moving to sign creation");
 		return handledArgs;
 	}
 
