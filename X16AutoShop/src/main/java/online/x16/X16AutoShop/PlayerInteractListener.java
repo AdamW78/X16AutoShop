@@ -59,10 +59,15 @@ public class PlayerInteractListener implements Listener {
             //Get info for how the sign will be placed
             Block signBlock = signUtil.getSignBlock(p);
             BlockFace blockFace = signUtil.getSignBlockFace(p);
-            if (blockFace != BlockFace.UP) signUtil.toWallSign(signMaterial);
+            if (blockFace != BlockFace.UP) {
+            	signMaterial = signUtil.toWallSign(signMaterial);
+            	System.out.println("Blockface was not up, creating wall sign");
+            	System.out.println(signMaterial);
+            }
             if (debug) plugin.log("Successfully fetched all values to create sign - creating...");
+            System.out.println(blockFace);
             //Actually create the sign
-            signUtil.createShopSign(p, signBlock, blockFace, signMaterial, signColor, isBuy, itemToTrade, itemWorth);
+            signUtil.createShopSign(p, signBlock, signMaterial, signColor, isBuy, itemToTrade, itemWorth);
         }
 	}
 	

@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Rotatable;
 import org.bukkit.entity.Player;
@@ -43,7 +42,7 @@ public class SignUtil {
 	 * @param itemToTrade Type of item to be sold
 	 * @param itemWorth Value in supplied currency (default "$") of item purchase
 	 */
-	public void createShopSign(Player p, Block signBlock, BlockFace blockFaceDirection, Material signType, DyeColor color, 
+	public void createShopSign(Player p, Block signBlock, Material signType, DyeColor color, 
 			boolean isBuy, ItemStack itemToTrade, BigDecimal itemWorth) {
         //CREATE SIGN
 		//Set block type to sign (place a sign)
@@ -67,26 +66,24 @@ public class SignUtil {
 		//Set third line of sign to show the value that the item(s) will be sold/bought for
 		sign.setLine(3, plugin.getConfig().getString("default-currency-symbol") + itemWorth);
         //SIGN DIRECTION
-		BlockData signData = sign.getBlockData();
-        if (signData instanceof Rotatable) {
-        	if (debug) plugin.log("Grabbed rotatable data for sign");
-        	Rotatable signRotation = (Rotatable) signData;
-        	signRotation.setRotation(p.getFacing().getOppositeFace());
-        	sign.setBlockData(signRotation);
-        }
-        else if (signData instanceof Directional) {
-        	if (debug) plugin.log("Grabbed directional data for sign");
-        	Directional signDirection = (Directional) signData;
-        	signDirection.setFacing(p.getFacing().getOppositeFace());
-        	sign.setBlockData(signDirection);
-        }
-        else { if (debug) plugin.log("Failed to grab rotatable data"); }
         //Assign sign direction data to current sign
         //Refresh sign to update its text and position
         String[] theLines = new String[4];
         for (int i = 0; i < 4; i++) theLines[i] = sign.getLine(i);
         SignChangeEvent signChange = new SignChangeEvent(signBlock, p, theLines);
         Bukkit.getServer().getPluginManager().callEvent(signChange);
+        if (signBlock.getBlockData() instanceof Rotatable) {
+        	Rotatable signRotation = (Rotatable) signBlock.getBlockData();
+        	signRotation.setRotation(p.getFacing().getOppositeFace());
+        	signBlock.setBlockData(signRotation);
+        	if(debug) plugin.log("Created Rotatable (ground) sign facing "+signRotation.getRotation());
+        }
+        else if (signBlock.getBlockData() instanceof Directional) {
+        	Directional signDirection = (Directional) signBlock.getBlockData();
+        	signDirection.setFacing(p.getFacing().getOppositeFace());
+        	signBlock.setBlockData(signDirection);
+        	if(debug) plugin.log("Created Directional (wall) sign facing "+signDirection.getFacing());
+        }
 	}
 	
 	/**
@@ -123,25 +120,23 @@ public class SignUtil {
 	 * @return Pair<Block, BlockFace> for where Player was looking
 	 */
 	public Block getSignBlock(Player p) {
-		//Fetch block where the sign will be placed
-		Block signBlock = getBlockFacePair(p).getFirst();
 		//Check if signBlock is null (happens if you try placing on a block without a valid BlockFace like on a sign)
-        if (signBlock == null) {
+        if (getBlockFacePair(p) == null) {
             //Return the block at the player's feet to avoid a NullPointerException
             return p.getLocation().getBlock();
         }
-        return signBlock;
+        return getBlockFacePair(p).getFirst();
 	}
 	public BlockFace getSignBlockFace(Player p) {
-        BlockFace signBlockFace = getBlockFacePair(p).getSecond();
       //Check if signBlockFace is null (happens if you try placing on a block without a valid BlockFace like on a sign)
-        if (signBlockFace == null) {
+        if (getBlockFacePair(p) == null) {
             //Return the BlockFace pointing up (this will be at the Player's feet) to avoid a NullPointerException
         	//Notify the player that you had to do this
+        	System.out.println("Could not find sign face");
             p.spigot().sendMessage(messageBuilder.build("&cError: could not place sign - placed at your feet"));
             return BlockFace.UP;
         }
-        return signBlockFace;
+        return getBlockFacePair(p).getSecond();
 	}
 
 	/**

@@ -15,6 +15,10 @@ public class MessageBuilder {
 	}
 
 	public TextComponent build(String str) {
+		if(str.matches("(?i)&([a-f0-9k-or]).*")) {
+			
+			str.replaceAll(regex, replacement)
+		}
 		return new TextComponent(ChatColor.translateAlternateColorCodes('&', prefix+" "+str));
 	}
 	
